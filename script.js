@@ -1,6 +1,7 @@
 let wedge;
 let currentWedgeAngle;
 let left, right; 
+let playing = false;
 
 // potential themess
 let categories = [
@@ -38,16 +39,15 @@ function createWedge(currentWedgeAngle){
     let cy = height / 2;
     let r = 150;
 
-    let wedgeWidth = radians(40); // total wedge angle
+    let wedgeWidth = radians(40); 
 
+    // wedge coloring
     let labels = [2, 3, 4, 3, 2];
     let colors = ['#FFDF75', '#FF9A75', '#7595FF', '#FF9A75', '#FFDF75'];
     let numSlices = labels.length;
 
-    // Calculate start and end angle for entire wedge
     let wedgeStart = currentWedgeAngle - wedgeWidth / 2;
 
-    // Each slice width
     let sliceAngle = wedgeWidth / numSlices;
 
     noStroke();
@@ -55,17 +55,15 @@ function createWedge(currentWedgeAngle){
     textSize(14);
 
     for (let i = 0; i < numSlices; i++) {
-        // start and end angle for this slice
+
         let startA = wedgeStart + i * sliceAngle;
         let endA = startA + sliceAngle;
 
         fill(colors[i]);
         arc(cx, cy, r * 2, r * 2, startA, endA, PIE);
 
-        // Label at center of this slice (angle)
         let midAngle = (startA + endA) / 2;
 
-        // Position the label slightly inside the wedge radius
         let labelRadius = r * 0.7;
         let labelX = cx + labelRadius * cos(midAngle);
         let labelY = cy + labelRadius * sin(midAngle);
@@ -92,7 +90,6 @@ function begin(){
 }
 
 function reveal(){
-    showWedge = true;
     createWedge(currentWedgeAngle);
 }
 
@@ -103,12 +100,25 @@ function spin(){
 }
 
 function hide(){
-    clear()
-
-    
+    clear();
+    playing = true;
+    loop();
 }
 
+function draw(){
+    if (playing){
+        play_game();
+    }
+}
 
+function play_game(){
+
+    background(255)
+    stroke(0);
+    strokeWeight(2);
+    line(width/2, height/2, mouseX, mouseY);
+
+}
 
 function createButtons() {
     // Start the game (generate theme & spin wedge)
