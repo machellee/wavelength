@@ -2,6 +2,8 @@ let wedge;
 let currentWedgeAngle;
 let left, right; 
 let playing = false;
+let clicked = false;
+let endX, endY;
 
 // potential themess
 let categories = [
@@ -89,26 +91,27 @@ function begin(){
     text(right, width / 2 + 50, height / 2 + 50);
 }
 
-function reveal(){
-    createWedge(currentWedgeAngle);
-}
-
 function spin(){
     clear();
     text('Showing Player 1 Board... Close your eyes player 2', width / 2, 50);
     calcWedge();
 }
 
-function hide(){
-    clear();
-    playing = true;
-    loop();
-}
-
 function draw(){
     if (playing){
         play_game();
     }
+    if (!playing){
+        clear()
+        createWedge(currentWedgeAngle);
+
+        push();
+        stroke(0);
+        strokeWeight(2);
+        line(width/2, height/2, endX, endY);
+        pop();
+    }
+
 }
 
 function play_game(){
@@ -117,7 +120,22 @@ function play_game(){
     stroke(0);
     strokeWeight(2);
     line(width/2, height/2, mouseX, mouseY);
+}
 
+function mousePressed(){
+    if (playing){
+        endX = mouseX
+        endY = mouseY
+        playing = false;
+    }
+}
+
+function keyPressed(){
+    if (key === 'h'){
+        clear()
+        playing = true;
+        loop();
+    }
 }
 
 function createButtons() {
@@ -125,14 +143,7 @@ function createButtons() {
     buttonBegin = select('#buttonBegin');
     buttonBegin.mousePressed(begin);
 
-    // reveal where the wedge is 
-    buttonReveal = select('#buttonReveal');
-    buttonReveal.mousePressed(reveal);
-
     // Reset where the wedge is
     buttonSpin = select('#buttonSpin');
     buttonSpin.mousePressed(spin);
-
-    buttonHide = select('#buttonHide');
-    buttonHide.mousePressed(hide)
 }
