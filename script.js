@@ -1,11 +1,16 @@
 let wedge;
 let currentWedgeAngle;
-let left, right; 
-let playing = false;
-let clicked = false;
+let leftLabel, rightLabel;
+let mode = 'start'; //start, theme, wedge, playing, answer
 let endX, endY;
+let width = 640;
+let height = 480;
+let cx = width / 2;
+let cy = height / 2;
+let r = 150;
 
-// potential themess
+// categories (update later to be csv)
+
 let categories = [
     ["Winter", "Summer"],
     ["Asian people", "White People"],
@@ -21,18 +26,14 @@ let categories = [
     ["Alt", "Not Alt"]
 ]; 
 
-function setup(){
-    createCanvas(640, 480);
-    createButtons();
-    noLoop();
+function getcategory() {
+    return categories[Math.floor(Math.random() * categories.length)]
 }
 
-function calcWedge(){
-    let centerAngle = random(PI, TWO_PI); // upper half random position
-
-    currentWedgeAngle = centerAngle;
-
-    createWedge(centerAngle);
+function setup(){
+    createCanvas(width, height);
+    createButtons();
+    noLoop();
 }
 
 function createWedge(currentWedgeAngle){
@@ -75,34 +76,115 @@ function createWedge(currentWedgeAngle){
     }
 }
 
-function getcategory() {
-    return categories[Math.floor(Math.random() * categories.length)]
+function gameStart(){
+    mode = 'rules';
+    redraw();
 }
 
-function begin(){
-    clear();
-    textAlign(CENTER, CENTER)
-    text('Categories are:', width / 2, height / 2);
-    // Show the theme
-    [left, right] = getcategory();
+function setTheme(){
+    mode = 'theme';
+    [leftLabel, rightLabel] = getcategory();
+    loop();
+    noLoop();
+}
 
-    text(left, width / 2 - 50, height / 2 + 50);
 
-    text(right, width / 2 + 50, height / 2 + 50);
+function rules(){
+
+    textAlign(CENTER, CENTER);
+    textSize(20);
+    text("Game Rules:", width / 2, height / 4);
+
+    textSize(16);
+    text("1. Generate the theme for the round.\n" +
+        "2. Press 'h' to hide the wedge.\n" +
+        "3. Player 2 guesses by clicking.\n" +
+        "4. Repeat the game, maybe keep score?", 
+        width / 2, height / 2);
 }
 
 function spin(){
-    clear();
-    text('Showing Player 1 Board... Close your eyes player 2', width / 2, 50);
-    calcWedge();
+    mode = 'spin'
+    //clear();
+    endX = null;
+    endY = null;
+    currentWedgeAngle = random(PI, TWO_PI); // upper half random position
+    loop();
+}
+
+
+function displayTheme(){
+    
+    textAlign(CENTER, CENTER)
+    text('Categories are:', width / 2, height / 2);
+
+    text(leftLabel, width / 2 - 50, height / 2 + 50);
+
+    text(rightLabel, width / 2 + 50, height / 2 + 50);
+}
+
+function semiCircle(){
+    push();
+    fill('#FFE4BF');
+    strokeWeight(0);
+    arc(cx, cy, r * 2, r * 2, PI, TWO_PI);
+    pop();
+}
+
+function play_game(){
+    background(255)
+
+    semiCircle();
+
+    push();
+    stroke(0);
+    strokeWeight(2);
+    line(width/2, height/2, mouseX, mouseY);
+    pop();
+    
+    push();
+    fill(0);
+    text(leftLabel, cx - r, cy + 50);
+    text(rightLabel, cx + r, cy + 50);
+    pop();
+}
+
+function keyPressed(){
+    if (key === 'h' || key === 'H'){
+        clear();
+        mode = 'playing';
+        loop();
+    }
+}
+
+function mousePressed(){
+    if (mode === 'playing'){
+        endX = mouseX;
+        endY = mouseY;
+        mode = 'answer';
+    }
 }
 
 function draw(){
-    if (playing){
+    clear();
+
+    if (mode === 'rules'){
+       rules();
+    } else if (mode === 'theme'){
+        displayTheme();
+    } else if (mode === 'spin'){
+        semiCircle();
+        text('Showing Player 1 Board... Close your eyes player 2', width / 2, 50);
+        text(leftLabel, cx - r, cy + 50);
+        text(rightLabel, cx + r, cy + 50);
+        createWedge(currentWedgeAngle);
+    } else if (mode === 'playing'){
         play_game();
-    }
-    if (!playing){
-        clear()
+    } else if (mode === 'answer'){
+        clear();
+
+        semiCircle();
+
         createWedge(currentWedgeAngle);
 
         push();
@@ -110,40 +192,24 @@ function draw(){
         strokeWeight(2);
         line(width/2, height/2, endX, endY);
         pop();
+
+        text(leftLabel, cx - r, cy + 50);
+        text(rightLabel, cx + r, cy + 50);
+    } else{
+        // home screen
     }
-
-}
-
-function play_game(){
-
-    background(255)
-    stroke(0);
-    strokeWeight(2);
-    line(width/2, height/2, mouseX, mouseY);
-}
-
-function mousePressed(){
-    if (playing){
-        endX = mouseX
-        endY = mouseY
-        playing = false;
-    }
-}
-
-function keyPressed(){
-    if (key === 'h'){
-        clear()
-        playing = true;
-        loop();
-    }
+    
 }
 
 function createButtons() {
     // Start the game (generate theme & spin wedge)
     buttonBegin = select('#buttonBegin');
-    buttonBegin.mousePressed(begin);
+    buttonBegin.mousePressed(gameStart);
 
     // Reset where the wedge is
     buttonSpin = select('#buttonSpin');
     buttonSpin.mousePressed(spin);
+
+    buttonTheme = select('#buttonTheme');
+    buttonTheme.mousePressed(setTheme);
 }
