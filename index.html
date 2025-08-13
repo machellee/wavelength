@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Sketch</title>
+    <title>Wavelength</title>
 
     <link rel="stylesheet" type="text/css" href="style.css">
 
@@ -13,17 +13,46 @@
   </head>
 
   <body>
-    <script src="script.js"></script>
-    <h2> Wavelength Game</h2>
 
-    <div id="categoryLeft"></div>
-    <div id="categoryRight"></div>
+    <!-- Start -->
+    <div id="startScreen" class="screen">
+      <img src = "assets/title.png" alt = "Title Image"/>
+      <button id="buttonBegin" style="height:50px;width:100px">Start Game!</button>
+    </div>
 
-    <p> Reminder: Hit 'h' to hide the board</p>
+    <!-- Rules -->
+    <div id="rules" class="screen"> 
+      <p> Rules</p>
+      <button id="buttonTheme" style="height:50px;width:100px"> Select Theme!</button>
 
-    <button id="buttonBegin" style="height:50px;width:100px">Start Game!</button>
+
+    </div>
+
+    <!-- Choose Themes! -->
+    <div id="themed" class="screen">Theme selection
+
+    <button id="buttonNewtheme" style="height:50px;width:100px"> Select Theme!</button>
+
     <button id="buttonSpin" style="height:50px;width:100px">Spin the board!</button>
-    <button id="buttonTheme" style="height:50px;width:100px"> Select Theme!</button>
 
+    </div>
+
+    <!-- Spinning! -->
+    <div id="spin" class="screen">Spinning...
+
+      <button id="buttonSpinTheme" style="height:50px;width:100px"> New Theme!</button>
+
+      <button id="buttonreSpin" style="height:50px;width:100px">Respin!</button>
+
+
+    </div>
+    <div id="answer" class="screen">Answer reveal
+
+
+    </div>
+    
+
+
+    <script src="script.js"></script>
   </body>
 </html>

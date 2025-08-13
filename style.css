@@ -1,0 +1,7 @@
+.screen { display: none; }
+.screen.active { display: block; }
+
+#startScreen img {
+  width: 300px;
+  height: auto; /* Keeps aspect ratio */
+}

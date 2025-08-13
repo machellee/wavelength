@@ -85,9 +85,7 @@ function setTheme(){
     mode = 'theme';
     [leftLabel, rightLabel] = getcategory();
     loop();
-    noLoop();
 }
-
 
 function rules(){
 
@@ -169,10 +167,13 @@ function draw(){
     clear();
 
     if (mode === 'rules'){
-       rules();
+        showScreen("rules");
+        rules();
     } else if (mode === 'theme'){
+        showScreen("themed")
         displayTheme();
     } else if (mode === 'spin'){
+        showScreen("spin")
         semiCircle();
         text('Showing Player 1 Board... Close your eyes player 2', width / 2, 50);
         text(leftLabel, cx - r, cy + 50);
@@ -195,10 +196,18 @@ function draw(){
 
         text(leftLabel, cx - r, cy + 50);
         text(rightLabel, cx + r, cy + 50);
-    } else{
+    } else if (mode === 'start'){
         // home screen
+        showScreen("startScreen")
     }
     
+}
+
+function showScreen(targetId) {
+    document.querySelectorAll('.screen').forEach(el => {
+        el.classList.remove('active');
+    });
+    document.getElementById(targetId).classList.add('active');
 }
 
 function createButtons() {
@@ -212,4 +221,13 @@ function createButtons() {
 
     buttonTheme = select('#buttonTheme');
     buttonTheme.mousePressed(setTheme);
+
+    buttonNewTheme = select('#buttonNewtheme');
+    buttonNewTheme.mousePressed(setTheme);
+
+    buttonSpinTheme = select('#buttonSpinTheme');
+    buttonSpinTheme.mousePressed(setTheme);
+
+    buttonreSpin = select('#buttonreSpin');
+    buttonreSpin.mousePressed(spin);
 }
