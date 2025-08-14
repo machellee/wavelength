@@ -14,22 +14,30 @@
 
   <body>
 
-    <!-- Start -->
-    <div id="startScreen" class="screen">
+    <div id="game-header">
       <img src = "assets/title.png" alt = "Title Image"/>
+    </div>
+
+    <div id="game-container">
+    
+    <div id="canvas-wrapper">
+    </div>
+
+
+        <!-- Start -->
+    <div id="startScreen" class="screen">
       <button id="buttonBegin" style="height:50px;width:100px">Start Game!</button>
     </div>
 
     <!-- Rules -->
     <div id="rules" class="screen"> 
-      <p> Rules</p>
       <button id="buttonTheme" style="height:50px;width:100px"> Select Theme!</button>
 
 
     </div>
 
     <!-- Choose Themes! -->
-    <div id="themed" class="screen">Theme selection
+    <div id="themed" class="screen">
 
     <button id="buttonNewtheme" style="height:50px;width:100px"> Select Theme!</button>
 
@@ -38,19 +46,30 @@
     </div>
 
     <!-- Spinning! -->
-    <div id="spin" class="screen">Spinning...
+    <div id="spin" class="screen">
 
       <button id="buttonSpinTheme" style="height:50px;width:100px"> New Theme!</button>
 
       <button id="buttonreSpin" style="height:50px;width:100px">Respin!</button>
 
+    </div>
+
+    <!-- Playing! -->
+     <div id="playing" class="screen">
 
     </div>
-    <div id="answer" class="screen">Answer reveal
+
+
+    <div id="answer" class="screen">
+
+      <button id="buttonNew" style="height:50px;width:100px"> New Theme!</button>
+
+      <button id="buttonreplay" style="height:50px;width:100px">Play Again!</button>
 
 
     </div>
-    
+
+  </div>
 
 
     <script src="script.js"></script>

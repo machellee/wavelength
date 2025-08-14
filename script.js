@@ -4,7 +4,7 @@ let leftLabel, rightLabel;
 let mode = 'start'; //start, theme, wedge, playing, answer
 let endX, endY;
 let width = 640;
-let height = 480;
+let height = 300;
 let cx = width / 2;
 let cy = height / 2;
 let r = 150;
@@ -23,7 +23,9 @@ let categories = [
     ["Theater Kid", "Anime Kid"],
     ["Immigrant Household", "American Household"],
     ["American Drama", "Korean Drama"], 
-    ["Alt", "Not Alt"]
+    ["Alt", "Not Alt"], 
+    ['Labubu collector', 'Sonny angel Girl'], 
+    ['2013', '2016']
 ]; 
 
 function getcategory() {
@@ -31,22 +33,21 @@ function getcategory() {
 }
 
 function setup(){
-    createCanvas(width, height);
+    let canvas = createCanvas(width, height);
+    canvas.parent("canvas-wrapper");
     createButtons();
     noLoop();
 }
 
 function createWedge(currentWedgeAngle){
 
-    let cx = width / 2;
-    let cy = height / 2;
     let r = 150;
 
     let wedgeWidth = radians(40); 
 
     // wedge coloring
     let labels = [2, 3, 4, 3, 2];
-    let colors = ['#FFDF75', '#FF9A75', '#7595FF', '#FF9A75', '#FFDF75'];
+    let colors = ['#f2f5ac', '#f0bbb1', '#86A8E7', '#f0bbb1', '#f2f5ac'];
     let numSlices = labels.length;
 
     let wedgeStart = currentWedgeAngle - wedgeWidth / 2;
@@ -63,13 +64,13 @@ function createWedge(currentWedgeAngle){
         let endA = startA + sliceAngle;
 
         fill(colors[i]);
-        arc(cx, cy, r * 2, r * 2, startA, endA, PIE);
+        arc(cx, cy + 100, r * 2, r * 2, startA, endA, PIE);
 
         let midAngle = (startA + endA) / 2;
 
         let labelRadius = r * 0.7;
         let labelX = cx + labelRadius * cos(midAngle);
-        let labelY = cy + labelRadius * sin(midAngle);
+        let labelY = (cy + 100) + labelRadius * sin(midAngle);
 
         fill(0);
         text(labels[i], labelX, labelY);
@@ -95,9 +96,10 @@ function rules(){
 
     textSize(16);
     text("1. Generate the theme for the round.\n" +
-        "2. Press 'h' to hide the wedge.\n" +
-        "3. Player 2 guesses by clicking.\n" +
-        "4. Repeat the game, maybe keep score?", 
+        "2. Spin the wheel, player 2 look away!\n" +
+        "3. Press 'h' to hide the wedge.\n" +
+        "4. Player 2 guesses by clicking.\n" +
+        "5. Repeat the game, maybe keep score?", 
         width / 2, height / 2);
 }
 
@@ -114,36 +116,35 @@ function spin(){
 function displayTheme(){
     
     textAlign(CENTER, CENTER)
-    text('Categories are:', width / 2, height / 2);
+    text('Categories are:', width / 2, height / 2 - 50);
 
-    text(leftLabel, width / 2 - 50, height / 2 + 50);
-
-    text(rightLabel, width / 2 + 50, height / 2 + 50);
+    text(leftLabel + "  VS " + rightLabel, width / 2 , height / 2 );
 }
 
 function semiCircle(){
     push();
-    fill('#FFE4BF');
+    fill('#f0dab1');
     strokeWeight(0);
-    arc(cx, cy, r * 2, r * 2, PI, TWO_PI);
+    arc(cx, cy + 100, r * 2, r * 2, PI, TWO_PI);
     pop();
 }
 
 function play_game(){
-    background(255)
 
     semiCircle();
+
+    text('Take a guess', width / 2, 50);
 
     push();
     stroke(0);
     strokeWeight(2);
-    line(width/2, height/2, mouseX, mouseY);
+    line(width/2, cy + 100, mouseX, mouseY);
     pop();
     
     push();
     fill(0);
-    text(leftLabel, cx - r, cy + 50);
-    text(rightLabel, cx + r, cy + 50);
+    text(leftLabel, cx - r, cy + 120);
+    text(rightLabel, cx + r, cy + 120);
     pop();
 }
 
@@ -175,13 +176,15 @@ function draw(){
     } else if (mode === 'spin'){
         showScreen("spin")
         semiCircle();
-        text('Showing Player 1 Board... Close your eyes player 2', width / 2, 50);
-        text(leftLabel, cx - r, cy + 50);
-        text(rightLabel, cx + r, cy + 50);
+        text('Press h when ready to start', width / 2, 50);
+        text(leftLabel, cx - r, cy + 120);
+        text(rightLabel, cx + r, cy + 120);
         createWedge(currentWedgeAngle);
     } else if (mode === 'playing'){
+        showScreen("playing")
         play_game();
     } else if (mode === 'answer'){
+        showScreen("answer")
         clear();
 
         semiCircle();
@@ -191,11 +194,12 @@ function draw(){
         push();
         stroke(0);
         strokeWeight(2);
-        line(width/2, height/2, endX, endY);
+        line(width/2, cy + 100, endX, endY);
         pop();
 
-        text(leftLabel, cx - r, cy + 50);
-        text(rightLabel, cx + r, cy + 50);
+        text(leftLabel, cx - r, cy + 120);
+        text(rightLabel, cx + r, cy + 120);
+        text('Are you on the same wavelength?', width / 2, 50);
     } else if (mode === 'start'){
         // home screen
         showScreen("startScreen")
@@ -230,4 +234,11 @@ function createButtons() {
 
     buttonreSpin = select('#buttonreSpin');
     buttonreSpin.mousePressed(spin);
+
+    buttonReplay = select('#buttonNew');
+    buttonReplay.mousePressed(setTheme);
+
+    buttonSpinEnd = select('#buttonreplay');
+    buttonSpinEnd.mousePressed(spin);
+
 }
